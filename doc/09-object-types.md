@@ -1122,20 +1122,22 @@ object Notification "localhost-ping-notification" {
 
 Configuration Attributes:
 
-  Name                      | Type                  | Description
-  --------------------------|-----------------------|----------------------------------
-  host\_name                | Object name           | **Required.** The name of the host this notification belongs to.
-  service\_name             | Object name           | **Optional.** The short name of the service this notification belongs to. If omitted, this notification object is treated as host notification.
-  vars                      | Dictionary            | **Optional.** A dictionary containing custom attributes that are specific to this notification object.
-  users                     | Array of object names | **Required.** A list of user names who should be notified. **Optional.** if the `user_groups` attribute is set.
-  user\_groups              | Array of object names | **Required.** A list of user group names who should be notified. **Optional.** if the `users` attribute is set.
-  times                     | Dictionary            | **Optional.** A dictionary containing `begin` and `end` attributes for the notification.
-  command                   | Object name           | **Required.** The name of the notification command which should be executed when the notification is triggered.
-  interval                  | Duration              | **Optional.** The notification interval (in seconds). This interval is used for active notifications. Defaults to 30 minutes. If set to 0, [re-notifications](03-monitoring-basics.md#disable-renotification) are disabled.
-  period                    | Object name           | **Optional.** The name of a time period which determines when this notification should be triggered. Not set by default.
-  zone		            | Object name           | **Optional.** The zone this object is a member of. Please read the [distributed monitoring](06-distributed-monitoring.md#distributed-monitoring) chapter for details.
-  types                     | Array                 | **Optional.** A list of type filters when this notification should be triggered. By default everything is matched.
-  states                    | Array                 | **Optional.** A list of state filters when this notification should be triggered. By default everything is matched.
+  Name                          | Type                  | Description
+  ------------------------------|-----------------------|----------------------------------
+  host\_name                    | Object name           | **Required.** The name of the host this notification belongs to.
+  service\_name                 | Object name           | **Optional.** The short name of the service this notification belongs to. If omitted, this notification object is treated as host notification.
+  vars                          | Dictionary            | **Optional.** A dictionary containing custom attributes that are specific to this notification object.
+  users                         | Array of object names | **Required.** A list of user names who should be notified. **Optional.** if the `user_groups` attribute is set.
+  user\_groups                  | Array of object names | **Required.** A list of user group names who should be notified. **Optional.** if the `users` attribute is set.
+  times                         | Dictionary            | **Optional.** A dictionary containing `begin` and `end` attributes for the notification.
+  command                       | Object name           | **Required.** The name of the notification command which should be executed when the notification is triggered.
+  interval                      | Duration              | **Optional.** The notification interval (in seconds). This interval is used for active notifications. Defaults to 30 minutes. If set to 0, [re-notifications](03-monitoring-basics.md#disable-renotification) are disabled.
+  period                        | Object name           | **Optional.** The name of a time period which determines when this notification should be triggered. Not set by default.
+  zone		                    | Object name           | **Optional.** The zone this object is a member of. Please read the [distributed monitoring](06-distributed-monitoring.md#distributed-monitoring) chapter for details.
+  types                         | Array                 | **Optional.** A list of type filters when this notification should be triggered. By default everything is matched.
+  states                        | Array                 | **Optional.** A list of state filters when this notification should be triggered. By default everything is matched.
+  always_send_acknowledgements  | Boolean               | **Optional.** Whether acknowledgement notifications should be send, even if a user got no problem notification. This defaults to `false`
+
 
 Available notification state filters for Service:
 

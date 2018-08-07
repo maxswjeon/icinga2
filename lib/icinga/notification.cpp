@@ -410,7 +410,7 @@ void Notification::BeginExecuteNotification(NotificationType type, const CheckRe
 		}
 
 		/* on acknowledgement, check if user was notified before */
-		if (type == NotificationAcknowledgement) {
+		if (type == NotificationAcknowledgement && !GetAlwaysSendAcknowledgements()) {
 			if (!notifiedProblemUsers->Contains(userName)) {
 				Log(LogNotice, "Notification")
 						<< "We did not notify user '" << userName << "' for a problem before. Not sending acknowledgement notification.";

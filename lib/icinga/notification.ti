@@ -94,6 +94,10 @@ class Notification : CustomVarObject < NotificationNameComposer
 		default {{{ return false; }}}
 	};
 
+	[config] bool always_send_acknowledgements {
+		default {{{ return false; }}}
+	};
+
 	[state] Timestamp last_notification;
 	[state] Timestamp next_notification;
 	[state] int notification_number;
