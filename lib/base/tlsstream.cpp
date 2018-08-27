@@ -226,10 +226,20 @@ void TlsStream::OnEvent(int revents)
 			rc = SSL_do_handshake(m_SSL.get());
 
 			if (rc > 0) {
+				Log(LogCritical, "SSL-DERP", "Handshake done Client: " + m_Socket->GetClientAddress());
 				success = true;
 				m_HandshakeOK = true;
 				m_CV.notify_all();
+			} else {
+				int err = SSL_get_error(m_SSL.get(), rc);
+				Log(LogCritical, "SSL-DERP")
+						<< "Errorcode: " << err << " Client: " << m_Socket->GetClientAddress();
 			}
+
+			Log(LogCritical, "SSL-DERP")
+					<< "Update timer " << m_Socket->GetClientAddress();
+
+			m_Timeout = boost::get_system_time() + boost::posix_time::seconds(TLS_TIMEOUT_SECONDS);
 
 			break;
 		default:
@@ -315,14 +325,17 @@ void TlsStream::Handshake()
 	m_CurrentAction = TlsActionHandshake;
 	ChangeEvents(POLLOUT);
 
-	boost::system_time const timeout = boost::get_system_time() + boost::posix_time::seconds(TLS_TIMEOUT_SECONDS);
+	m_Timeout = boost::get_system_time() + boost::posix_time::seconds(TLS_TIMEOUT_SECONDS);
 
-	while (!m_HandshakeOK && !m_ErrorOccurred && !m_Eof && timeout > boost::get_system_time())
-		m_CV.timed_wait(lock, timeout);
+	while (!m_HandshakeOK && !m_ErrorOccurred && !m_Eof && m_Timeout > boost::get_system_time())
+		m_CV.timed_wait(lock, m_Timeout);
 
 	// We should _NOT_ (underline, bold, itallic and wordart) throw an exception for a timeout.
-	if (timeout < boost::get_system_time())
-		BOOST_THROW_EXCEPTION(std::runtime_error("Timeout during handshake."));
+	if (m_Timeout < boost::get_system_time()) {
+		Log(LogCritical, "Derp")
+			<< "Timeout during handshare: " << m_Socket->GetClientAddress() << " HandshakeOK: " << m_HandshakeOK << " ErrorOccured: " << m_ErrorOccurred << " Eof " << m_Eof;
+		return;
+	}
 
 	if (m_Eof)
 		BOOST_THROW_EXCEPTION(std::runtime_error("Socket was closed during TLS handshake."));

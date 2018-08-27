@@ -85,6 +85,7 @@ private:
 	String m_VerifyError;
 	int m_ErrorCode;
 	bool m_ErrorOccurred;
+	boost::system_time m_Timeout;
 
 	Socket::Ptr m_Socket;
 	ConnectionRole m_Role;
